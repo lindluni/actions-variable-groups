@@ -1,0 +1,25 @@
+name: 'Department of Veterans Affairs New User Automation'
+author: 'Brett Logan'
+description: 'Automates the addition of new users into the VA org'
+inputs:
+  body:
+    description: The body of the newly created issue
+    required: true
+    default: ${{ github.event.comment.body }}
+  issue_number:
+    description: The GitHub issue number
+    required: true
+    default: ${{ github.event.issue.number }}
+  org:
+    description: The GitHub org containing the repo
+    required: true
+    default: ${{ github.repository_owner }}
+  repo:
+    description: The repo where the GitHub issue exists
+    required: true
+  token:
+    description: GitHub Admin PAT to open issues and comment
+    required: true
+runs:
+  using: node12
+  main: dist/index.js
