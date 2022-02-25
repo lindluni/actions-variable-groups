@@ -33,14 +33,17 @@ const client = new _Octokit({
 (async function () {
     try {
         for (const group of groups) {
+            core.info(`Processing group ${group}`);
             const files = retrieveFiles(group);
             if (Array.isArray(files)) {
                 for (const _file of files) {
+                    core.info(`Processing file`);
                     const file = await retrieveFile(_file.path);
-                    const content = Buffer.from(file.content, 'base64').toString('utf8')
-                    await processVariables(content)
+                    core.info(`Processing variables`);
+                    await processVariables(file.content)
                 }
             } else {
+                core.info(`Processing variables`);
                 await processVariables(files.content)
             }
         }
@@ -51,6 +54,7 @@ const client = new _Octokit({
 
 async function retrieveFiles(group) {
     try {
+        core.info(`Retrieving files for group ${group}`);
         const {data: files} = await client.repos.getContent({
             owner: org,
             repo: repo,
@@ -64,6 +68,7 @@ async function retrieveFiles(group) {
 
 async function retrieveFile(path) {
     try {
+        core.info(`Retrieving file ${path}`);
         const {data: file} = await client.repos.getContent({
             owner: org,
             repo: repo,
@@ -77,12 +82,15 @@ async function retrieveFile(path) {
 
 async function processVariables(file) {
     try {
+        core.info(`Processing variables for file ${file}`);
         const content = Buffer.from(file.content, 'base64').toString('utf8')
+        core.info(`Converting variables to JSON for file ${file}`);
         const group = yaml.load(content, "utf8")
         for (const variable of group.variables) {
+            core.info(`Appending variable ${variable.name} to environment`);
             await fs.appendFileSync(process.env.GITHUB_ENV, `${variable.name}=${variable.value}${os.EOL}`)
         }
     } catch (err) {
-        core.setFailed(`Fail to process variables: ${err.message}`)
+        core.setFailed(`Failed to process variables: ${err.message}`)
     }
 }
