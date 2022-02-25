@@ -14351,8 +14351,8 @@ var __webpack_exports__ = {};
 const fs = __nccwpck_require__(7147);
 const os = __nccwpck_require__(2037);
 const yaml = __nccwpck_require__(1917);
-const core = __nccwpck_require__(2186);
 
+const core = __nccwpck_require__(2186);
 const {Octokit} = __nccwpck_require__(5375);
 const {retry} = __nccwpck_require__(6298);
 const {throttling} = __nccwpck_require__(9968);
@@ -14379,7 +14379,7 @@ const client = new _Octokit({
     }
 });
 
-(async function () {
+(async function main() {
     try {
         for (const group of groups) {
             core.info(`Processing group ${group}`)

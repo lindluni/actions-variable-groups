@@ -1,8 +1,8 @@
 const fs = require('fs');
 const os = require('os');
 const yaml = require('js-yaml');
-const core = require('@actions/core');
 
+const core = require('@actions/core');
 const {Octokit} = require("@octokit/rest");
 const {retry} = require("@octokit/plugin-retry");
 const {throttling} = require("@octokit/plugin-throttling");
@@ -29,7 +29,7 @@ const client = new _Octokit({
     }
 });
 
-(async function () {
+(async function main() {
     try {
         for (const group of groups) {
             core.info(`Processing group ${group}`)
