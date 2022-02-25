@@ -9,9 +9,9 @@ const {throttling} = require("@octokit/plugin-throttling");
 const _Octokit = Octokit.plugin(retry, throttling);
 
 const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n');
-const org = core.getInput('ORG', {required: true, trimWhitespace: true});
-const repo = core.getInput('REPO', {required: true, trimWhitespace: true});
-const token = core.getInput('TOKEN', {required: true, trimWhitespace: true});
+const org = core.getInput('org', {required: true, trimWhitespace: true});
+const repo = core.getInput('repo', {required: true, trimWhitespace: true});
+const token = core.getInput('token', {required: true, trimWhitespace: true});
 
 const client = new _Octokit({
     auth: token,
