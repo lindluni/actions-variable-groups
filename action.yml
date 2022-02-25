@@ -1,6 +1,6 @@
-name: 'Department of Veterans Affairs New User Automation'
+name: 'GitHub Actions Variable Groups'
 author: 'Brett Logan'
-description: 'Automates the addition of new users into the VA org'
+description: 'Allows for the central management of environment variables across multiple GitHub Actions projects.'
 inputs:
   groups:
     description: A list of file or directory paths to load variables from
@@ -15,7 +15,7 @@ inputs:
   token:
     description: GitHub Admin PAT to open issues and comment
     required: true
-    default: ${{ secrets.GITHUB_TOKEN }}
+    default: ${{ github.token }}
 runs:
   using: node12
   main: dist/index.js
