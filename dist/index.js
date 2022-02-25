@@ -14390,7 +14390,7 @@ const client = new _Octokit({
                     await processVariables(file)
                 }
             } else {
-                await processVariables(files)
+                await processVariables(files.content)
             }
         }
     } catch (error) {
@@ -14434,8 +14434,8 @@ async function processVariables(rawContent) {
         const content = Buffer.from(rawContent, 'base64').toString('utf8')
         const group = yaml.load(content, "utf8")
         for (const variable of group.variables) {
-            core.info(`Appending variable ${variable.name} to environment`)
-            await fs.appendFileSync(process.env.GITHUB_ENV, `${variable.name}=${variable.value}${os.EOL}`)
+            core.info(`Appending variable ${variable.key} to environment`)
+            await fs.appendFileSync(process.env.GITHUB_ENV, `${variable.key}=${variable.value}${os.EOL}`)
         }
     } catch (err) {
         core.setFailed(`Failed to process variables: ${err.message}`)
