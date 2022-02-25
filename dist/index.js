@@ -14359,7 +14359,6 @@ const {throttling} = __nccwpck_require__(9968);
 const _Octokit = Octokit.plugin(retry, throttling);
 
 const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n');
-console.log(groups);
 const org = core.getInput('org', {required: true, trimWhitespace: true});
 const repo = core.getInput('repo', {required: true, trimWhitespace: true});
 const token = core.getInput('token', {required: true, trimWhitespace: true});
@@ -14423,18 +14422,16 @@ async function retrieveFile(path) {
             repo: repo,
             path: path
         })
-        return Buffer.from(file.content, 'base64').toString('utf8')
+        return file.content
     } catch (err) {
         core.setFailed(`Fail to retrieve file ${path}: ${err.message}`)
         process.exit(1)
     }
 }
 
-async function processVariables(file) {
+async function processVariables(rawContent) {
     try {
-        core.info(`Processing variables for file ${file.path}`)
-        const content = Buffer.from(file.content, 'base64').toString('utf8')
-        core.info(`Converting variables to JSON for file ${file.path}`)
+        const content = Buffer.from(rawContent, 'base64').toString('utf8')
         const group = yaml.load(content, "utf8")
         for (const variable of group.variables) {
             core.info(`Appending variable ${variable.name} to environment`)
