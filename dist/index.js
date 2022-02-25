@@ -14359,6 +14359,7 @@ const {throttling} = __nccwpck_require__(9968);
 const _Octokit = Octokit.plugin(retry, throttling);
 
 const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n');
+console.log(groups);
 const org = core.getInput('org', {required: true, trimWhitespace: true});
 const repo = core.getInput('repo', {required: true, trimWhitespace: true});
 const token = core.getInput('token', {required: true, trimWhitespace: true});
