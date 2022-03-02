@@ -6,7 +6,7 @@ injected into your Action's environment and will be available as plaintext in yo
 Actions Variable Groups is a GitHub Action that allows you to centrally store and manage common variables needed by your
 GitHub Actions. The Action will then inject the variables you have stored into your Actions environment at runtime.
 
-This is an attempt to mimic Azure DevOps Variable Groups.
+This is an attempt to mimic non-secret Azure DevOps Variable Groups.
 
 ### Setup
 
