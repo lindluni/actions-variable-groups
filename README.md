@@ -54,7 +54,8 @@ jobs:
   name: Echo Environment
   runs-on: ubuntu-latest
   steps:
-    - uses: lindluni/actions-variable-groups@v1.0.0
+    - name: Inject Variables
+      uses: lindluni/actions-variable-groups@v1.0.0
       with:
         org: lindluni
         repo: variable-groups
@@ -62,4 +63,6 @@ jobs:
           projectAlpha/variables # This is a path in the lindluni/variable-groups repository, so all variable group files in the directory will be injected
           projectBeta/variables/nodejs.yml # This is a file in the lindluni/variable-groups repository, so only variable groups in the file will be injected
           projectGamma/variables/golang.yml # This is a file in the lindluni/variable-groups repository, so only variable groups in the file will be injected
+    - name: Print Environment
+      run: env | sort
 ```
