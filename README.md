@@ -54,7 +54,7 @@ jobs:
   name: Echo Environment
   runs-on: ubuntu-latest
   steps:
-    - uses: lindluni/actions-variable-groups@1.0.0
+    - uses: lindluni/actions-variable-groups@v1.0.0
       with:
         org: lindluni
         repo: variable-groups
