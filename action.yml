@@ -3,19 +3,19 @@ author: 'Brett Logan'
 description: 'Allows for the central management of environment variables across multiple GitHub Actions projects.'
 inputs:
   groups:
-    description: A list of file or directory paths to load variables from
+    description: A list of variable group files or directories containing variable group files.
     required: true
   org:
-    description: The GitHub org containing the repo
+    description: The GitHub org containing where the repo is hosted.
     required: true
     default: ${{ github.repository_owner }}
   repo:
-    description: The repo where the GitHub issue exists
+    description: The repo where the GitHub files under groups are hosted.
     required: true
   token:
-    description: GitHub Admin PAT to open issues and comment
+    description: GitHub PAT used to access the repo.
     required: true
     default: ${{ github.token }}
 runs:
-  using: node12
+  using: node16
   main: dist/index.js
