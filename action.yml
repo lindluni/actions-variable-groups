@@ -16,6 +16,9 @@ inputs:
     description: GitHub PAT used to access the repo.
     required: true
     default: ${{ github.token }}
+branding:
+  icon: align-left
+  color: purple
 runs:
   using: node16
   main: dist/index.js
