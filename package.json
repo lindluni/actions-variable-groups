@@ -1,13 +1,12 @@
 {
   "name": "actions-variable-groups",
   "version": "1.0.0",
-  "description": "",
+  "description": "Allows for the central management of environment variables across multiple GitHub Actions workflows",
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/.bin/ncc build index.js"
   },
-  "keywords": [],
-  "author": "",
+  "author": "Brett Logan",
   "license": "Apache-2.0",
   "dependencies": {
     "@actions/core": "^1.6.0",

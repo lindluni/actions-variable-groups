@@ -1,6 +1,6 @@
 name: 'GitHub Actions Variable Groups'
 author: 'Brett Logan'
-description: 'Allows for the central management of environment variables across multiple GitHub Actions projects.'
+description: 'Allows for the central management of environment variables across multiple GitHub Actions workflows'
 inputs:
   groups:
     description: A list of variable group files or directories containing variable group files.
