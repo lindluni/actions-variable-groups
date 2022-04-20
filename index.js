@@ -8,7 +8,7 @@ const {retry} = require("@octokit/plugin-retry");
 const {throttling} = require("@octokit/plugin-throttling");
 const _Octokit = Octokit.plugin(retry, throttling);
 
-const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n');
+const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n').map(group => group.trim());
 const org = core.getInput('org', {required: true, trimWhitespace: true});
 const repo = core.getInput('repo', {required: true, trimWhitespace: true});
 const token = core.getInput('token', {required: true, trimWhitespace: true});
@@ -31,9 +31,13 @@ const client = new _Octokit({
 
 (async function main() {
     try {
-        for (const group of groups) {
+        for (let group of groups) {
             core.info(`Processing group ${group}`)
-            const files = await retrieveFiles(group)
+            let ref
+            if (group.includes('@')) {
+                [group, ref] = group.split('@')
+            }
+            const files = await retrieveFiles(group, ref)
             if (Array.isArray(files)) {
                 for (const _file of files) {
                     const file = await retrieveFile(_file.path)
@@ -49,30 +53,49 @@ const client = new _Octokit({
     }
 })()
 
-async function retrieveFiles(group) {
+async function retrieveFiles(group, ref) {
     try {
         core.info(`Retrieving files for group ${group}`)
-        const {data: files} = await client.repos.getContent({
-            owner: org,
-            repo: repo,
-            path: group
-        })
-        return files
+        if (ref) {
+            const {data: files} = await client.repos.getContent({
+                owner: org,
+                repo: repo,
+                path: group,
+            })
+            return files
+        } else {
+            const {data: files} = await client.repos.getContent({
+                owner: org,
+                repo: repo,
+                path: group,
+            })
+            return files
+        }
     } catch (err) {
         core.setFailed(`Fail to retrieve files ${group}: ${err.message}`)
         process.exit(1)
     }
 }
 
-async function retrieveFile(path) {
+async function retrieveFile(path, ref) {
     try {
         core.info(`Retrieving file ${path}`)
-        const {data: file} = await client.repos.getContent({
-            owner: org,
-            repo: repo,
-            path: path
-        })
-        return file.content
+        if (ref) {
+            const {data: file} = await client.repos.getContent({
+                owner: org,
+                repo: repo,
+                path: path,
+                ref: ref
+            })
+            return file.content
+        } else {
+            const {data: file} = await client.repos.getContent({
+                owner: org,
+                repo: repo,
+                path: path,
+            })
+            return file.content
+        }
     } catch (err) {
         core.setFailed(`Fail to retrieve file ${path}: ${err.message}`)
         process.exit(1)
