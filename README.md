@@ -26,7 +26,8 @@ variables:
 ### Usage
 
 You may then consume the Action by adding the following to your GitHub Actions workflow, which will read in all variable
-group files and directories and inject them into your GitHub Actions environment:
+group files and directories and inject them into your GitHub Actions environment. You may specify a `ref` using the `@`
+syntax to check out a specific version. If you do not specify a ref, the default branch will be chosen.
 
 **Note**: If you store your variables in a public or internal repository, you do not need to provide a token to use this
 actions.
@@ -40,7 +41,9 @@ steps:
       token: <token with access to repo if it is not an internal rep>
       groups: |
         <path to a directory in the above repo containing variable group files>
+        <path to a directory in the above repo containing variable group files versioned on a specific ref>@<branch/tag/commit>
         <path to a variable group file in the above repo>
+        <path to a variable group file in the above repo versioned on a specific ref>@<branch/tag/commit>
         ...
 ```
 
@@ -61,8 +64,11 @@ jobs:
         repo: variable-groups
         groups: |
           projectAlpha/variables # This is a path in the lindluni/variable-groups repository, so all variable group files in the directory will be injected
+          projectAlpha/variables@main # TSame as above, but references a specific version via branch
           projectBeta/variables/nodejs.yml # This is a file in the lindluni/variable-groups repository, so only variable groups in the file will be injected
+          projectBeta/variables/nodejs.yml@v1.0.0 # Same as above, but references a specific version via tag
           projectGamma/variables/golang.yml # This is a file in the lindluni/variable-groups repository, so only variable groups in the file will be injected
+          projectGamma/variables/golang.yml@9969a43ca477571f91073abf66dfceaf1d3d069a # Same as above, but references a specific version via commit
     - name: Print Environment
       run: env | sort
 ```
