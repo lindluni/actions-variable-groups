@@ -1,20 +1,22 @@
-const fs = require('fs');
-const os = require('os');
-const yaml = require('js-yaml');
+const fs = require('fs')
+const os = require('os')
+const yaml = require('js-yaml')
 
-const core = require('@actions/core');
-const {Octokit} = require("@octokit/rest");
-const {retry} = require("@octokit/plugin-retry");
-const {throttling} = require("@octokit/plugin-throttling");
-const _Octokit = Octokit.plugin(retry, throttling);
+const core = require('@actions/core')
+const {Octokit} = require('@octokit/rest')
+const {retry} = require('@octokit/plugin-retry')
+const {throttling} = require('@octokit/plugin-throttling')
+const _Octokit = Octokit.plugin(retry, throttling)
 
-const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n').map(group => group.trim());
-const org = core.getInput('org', {required: true, trimWhitespace: true});
-const repo = core.getInput('repo', {required: true, trimWhitespace: true});
-const token = core.getInput('token', {required: true, trimWhitespace: true});
+const baseURL = core.getInput('url', {required: true, trimWhitespace: true})
+const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n').map(group => group.trim())
+const org = core.getInput('org', {required: true, trimWhitespace: true})
+const repo = core.getInput('repo', {required: true, trimWhitespace: true})
+const token = core.getInput('token', {required: true, trimWhitespace: true})
 
 const client = new _Octokit({
     auth: token,
+    baseUrl: baseURL,
     throttle: {
         onRateLimit: (retryAfter, options, octokit) => {
             octokit.log.warn(`Request quota exhausted for request ${options.method} ${options.url}`)
@@ -27,7 +29,7 @@ const client = new _Octokit({
             octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         },
     }
-});
+})
 
 (async function main() {
     try {
@@ -105,7 +107,7 @@ async function retrieveFile(path, ref) {
 async function processVariables(rawContent) {
     try {
         const content = Buffer.from(rawContent, 'base64').toString('utf8')
-        const group = yaml.load(content, "utf8")
+        const group = yaml.load(content, 'utf8')
         for (const variable of group.variables) {
             core.info(`Appending variable ${variable.key} to environment`)
             await fs.appendFileSync(process.env.GITHUB_ENV, `${variable.key}=${variable.value}${os.EOL}`)
