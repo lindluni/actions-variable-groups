@@ -14381,30 +14381,6 @@ const client = new _Octokit({
     }
 })
 
-(async function main() {
-    try {
-        for (let group of groups) {
-            core.info(`Processing group ${group}`)
-            let ref
-            if (group.includes('@')) {
-                [group, ref] = group.split('@')
-            }
-            const files = await retrieveFiles(group, ref)
-            if (Array.isArray(files)) {
-                for (const _file of files) {
-                    const file = await retrieveFile(_file.path)
-                    await processVariables(file)
-                }
-            } else {
-                await processVariables(files.content)
-            }
-        }
-    } catch (error) {
-        core.setFailed(`Failed processing files: ${error.message}`)
-        process.exit(1)
-    }
-})()
-
 async function retrieveFiles(group, ref) {
     try {
         core.info(`Retrieving files for group ${group}`)
@@ -14467,6 +14443,32 @@ async function processVariables(rawContent) {
         process.exit(1)
     }
 }
+
+async function main() {
+    try {
+        for (let group of groups) {
+            core.info(`Processing group ${group}`)
+            let ref
+            if (group.includes('@')) {
+                [group, ref] = group.split('@')
+            }
+            const files = await retrieveFiles(group, ref)
+            if (Array.isArray(files)) {
+                for (const _file of files) {
+                    const file = await retrieveFile(_file.path)
+                    await processVariables(file)
+                }
+            } else {
+                await processVariables(files.content)
+            }
+        }
+    } catch (error) {
+        core.setFailed(`Failed processing files: ${error.message}`)
+        process.exit(1)
+    }
+}
+
+main()
 
 })();
 
