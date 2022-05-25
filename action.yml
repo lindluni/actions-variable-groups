@@ -2,6 +2,12 @@ name: 'GitHub Actions Variable Groups'
 author: 'Brett Logan'
 description: 'Allows for the central management of environment variables across multiple GitHub Actions workflows'
 inputs:
+  app-id:
+    description: The AppID property of your GitHub App
+    required: false
+  private-key:
+    description: The private key of your GitHub App
+    required: false
   groups:
     description: A list of variable group files or directories containing variable group files.
     required: true
