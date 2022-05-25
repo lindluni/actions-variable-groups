@@ -8,6 +8,9 @@ inputs:
   private-key:
     description: The private key of your GitHub App
     required: false
+  installation-id:
+    description: The installation ID of the GitHub App
+    required: false
   groups:
     description: A list of variable group files or directories containing variable group files.
     required: true

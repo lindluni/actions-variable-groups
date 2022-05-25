@@ -24156,7 +24156,7 @@ async function newClient() {
                     return true
                 }
             },
-            onSecondaryRateLimit: (retryAfter, options, octokit) => {
+            onRateLimit: (retryAfter, options, octokit) => {
                 octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
             },
         }
@@ -24164,7 +24164,7 @@ async function newClient() {
 }
 
 async function newAppClient() {
-    const client = await new App({
+    return new App({
         appId: appID,
         privateKey: privateKey,
         Octokit: _Octokit.defaults({
@@ -24180,13 +24180,12 @@ async function newAppClient() {
                         return true;
                     }
                 },
-                onSecondaryRateLimit: (retryAfter, options, octokit) => {
+                onRateLimit: (retryAfter, options, octokit) => {
                     octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`);
                 }
             }
         })
-    });
-    return client
+    })
 }
 
 async function retrieveFiles(client, group, ref) {
