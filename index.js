@@ -11,6 +11,7 @@ const _Octokit = Octokit.plugin(retry, throttling)
 
 const appID = core.getInput('app-id', {required: false, trimWhitespace: true})
 const privateKey = core.getInput('private-key', {required: false, trimWhitespace: true})
+// const installationID = Number(core.getInput('installation-id', {required: false, trimWhitespace: true}))
 const baseURL = core.getInput('url', {required: true, trimWhitespace: true})
 const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n').map(group => group.trim())
 const org = core.getInput('org', {required: true, trimWhitespace: true})
@@ -22,7 +23,7 @@ async function newClient() {
         auth: token,
         baseUrl: baseURL,
         throttle: {
-            onRateLimit: (retryAfter, options, octokit) => {
+            onAbuseLimit: (retryAfter, options, octokit) => {
                 octokit.log.warn(`Request quota exhausted for request ${options.method} ${options.url}`)
                 if (options.request.retryCount <= 1) {
                     octokit.log.info(`Retrying after ${retryAfter} seconds!`)
@@ -46,7 +47,7 @@ async function newAppClient() {
             },
             baseUrl: baseURL,
             throttle: {
-                onRateLimit: (retryAfter, options, octokit) => {
+                onAbuseLimit: (retryAfter, options, octokit) => {
                     octokit.log.warn(`Request quota exhausted for request ${options.method} ${options.url}`);
                     if (options.request.retryCount <= 1) {
                         octokit.log.info(`Retrying after ${retryAfter} seconds!`);
@@ -135,8 +136,6 @@ async function main() {
             core.info('Using token-based client')
             client = await newClient()
         }
-
-        console.log(client)
 
         for (let group of groups) {
             core.info(`Processing group ${group}`)
