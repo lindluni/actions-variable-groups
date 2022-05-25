@@ -128,11 +128,13 @@ async function main() {
     try {
         let client
         if (appID && privateKey) {
+            core.info('Using app client')
             client = await newAppClient()
         } else {
-            client = newClient()
+            core.info('Using token-based client')
+            client = await newClient()
         }
-        
+
         for (let group of groups) {
             core.info(`Processing group ${group}`)
             let ref
