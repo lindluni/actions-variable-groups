@@ -11,7 +11,7 @@ const _Octokit = Octokit.plugin(retry, throttling)
 
 const appID = core.getInput('app-id', {required: false, trimWhitespace: true})
 const privateKey = core.getInput('private-key', {required: false, trimWhitespace: true})
-// const installationID = Number(core.getInput('installation-id', {required: false, trimWhitespace: true}))
+const installationID = Number(core.getInput('installation-id', {required: false, trimWhitespace: true}))
 const baseURL = core.getInput('url', {required: true, trimWhitespace: true})
 const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n').map(group => group.trim())
 const org = core.getInput('org', {required: true, trimWhitespace: true})
@@ -128,10 +128,10 @@ async function processVariables(rawContent) {
 async function main() {
     try {
         let client
-        if (appID && privateKey) {
+        if (appID && privateKey && installationID) {
             core.info('Using app client')
             const appClient = await newAppClient()
-            client = await appClient.getInstallationOctokit(10)
+            client = await appClient.getInstallationOctokit(installationID)
         } else {
             core.info('Using token-based client')
             client = await newClient()
