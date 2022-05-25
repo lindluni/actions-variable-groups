@@ -130,7 +130,8 @@ async function main() {
         let client
         if (appID && privateKey) {
             core.info('Using app client')
-            client = await newAppClient()
+            const appClient = await newAppClient()
+            client = await appClient.getInstallationOctokit(10)
         } else {
             core.info('Using token-based client')
             client = await newClient()

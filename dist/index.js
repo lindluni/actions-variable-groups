@@ -24156,7 +24156,7 @@ async function newClient() {
                     return true
                 }
             },
-            onAbuseLimit: (retryAfter, options, octokit) => {
+            onSecondaryRateLimit: (retryAfter, options, octokit) => {
                 octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
             },
         }
@@ -24164,7 +24164,7 @@ async function newClient() {
 }
 
 async function newAppClient() {
-    return new App({
+    const client = await new App({
         appId: appID,
         privateKey: privateKey,
         Octokit: _Octokit.defaults({
@@ -24180,12 +24180,13 @@ async function newAppClient() {
                         return true;
                     }
                 },
-                onAbuseLimit: (retryAfter, options, octokit) => {
+                onSecondaryRateLimit: (retryAfter, options, octokit) => {
                     octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`);
                 }
             }
         })
     });
+    return client
 }
 
 async function retrieveFiles(client, group, ref) {
@@ -24256,11 +24257,14 @@ async function main() {
         let client
         if (appID && privateKey) {
             core.info('Using app client')
-            client = await newAppClient()
+            const appClient = await newAppClient()
+            client = await appClient.getInstallationOctokit(10)
         } else {
             core.info('Using token-based client')
             client = await newClient()
         }
+
+        console.log(client)
 
         for (let group of groups) {
             core.info(`Processing group ${group}`)
