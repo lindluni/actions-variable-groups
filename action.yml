@@ -25,5 +25,5 @@ branding:
   icon: align-left
   color: purple
 runs:
-  using: node12
+  using: node16
   main: dist/index.js
