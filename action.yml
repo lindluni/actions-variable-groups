@@ -12,6 +12,7 @@ inputs:
   repo:
     description: The repo where the GitHub files under groups are hosted.
     required: true
+    default: ${{ github.event.repository.name }}
   url:
     description: GitHub API URL if using GitHub Server or AE
     required: false
