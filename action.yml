@@ -16,7 +16,7 @@ inputs:
   url:
     description: GitHub API URL if using GitHub Server or AE
     required: false
-    default: https://api.github.com/
+    default: https://api.github.com
   token:
     description: GitHub PAT used to access the repo.
     required: true
