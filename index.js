@@ -1,12 +1,11 @@
-const fs = require('fs')
-const os = require('os')
-const yaml = require('js-yaml')
+import fs from 'fs'
+import os from 'os'
+import yaml from 'js-yaml'
 
-const core = require('@actions/core')
-const {Octokit} = require('@octokit/rest')
-const {retry} = require('@octokit/plugin-retry')
-const {throttling} = require('@octokit/plugin-throttling')
-const _Octokit = Octokit.plugin(retry, throttling)
+import core from '@actions/core'
+import {Octokit} from '@octokit/rest'
+import {retry} from '@octokit/plugin-retry'
+import {throttling} from '@octokit/plugin-throttling'
 
 const baseURL = core.getInput('url', {required: true, trimWhitespace: true})
 const groups = core.getInput('groups', {required: true, trimWhitespace: true}).split('\n').map(group => group.trim())
@@ -14,6 +13,7 @@ const org = core.getInput('org', {required: true, trimWhitespace: true})
 const repo = core.getInput('repo', {required: true, trimWhitespace: true})
 const token = core.getInput('token', {required: true, trimWhitespace: true})
 
+const _Octokit = Octokit.plugin(retry, throttling)
 const client = new _Octokit({
     auth: token,
     baseUrl: baseURL,
@@ -31,7 +31,7 @@ const client = new _Octokit({
     }
 })
 
-async function retrieveFiles(group, ref) {
+const retrieveFiles = async (group, ref) => {
     try {
         core.info(`Retrieving files for group ${group}`)
         if (ref) {
@@ -39,6 +39,7 @@ async function retrieveFiles(group, ref) {
                 owner: org,
                 repo: repo,
                 path: group,
+                ref: ref
             })
             return files
         } else {
@@ -55,7 +56,7 @@ async function retrieveFiles(group, ref) {
     }
 }
 
-async function retrieveFile(path, ref) {
+const retrieveFile = async (path, ref) => {
     try {
         core.info(`Retrieving file ${path}`)
         if (ref) {
@@ -80,7 +81,7 @@ async function retrieveFile(path, ref) {
     }
 }
 
-async function processVariables(rawContent) {
+const processVariables = async (rawContent) => {
     try {
         const content = Buffer.from(rawContent, 'base64').toString('utf8')
         const group = yaml.load(content, 'utf8')
@@ -94,7 +95,7 @@ async function processVariables(rawContent) {
     }
 }
 
-async function main() {
+const main = async () => {
     try {
         for (let group of groups) {
             core.info(`Processing group ${group}`)
