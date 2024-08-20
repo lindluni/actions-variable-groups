@@ -54,21 +54,22 @@ name: Inject Variables
 on:
   pull:
 jobs:
-  name: Echo Environment
-  runs-on: ubuntu-latest
-  steps:
-    - name: Inject Variables
-      uses: lindluni/actions-variable-groups@v1.0.0
-      with:
-        org: lindluni
-        repo: variable-groups
-        groups: |
-          projectAlpha/variables # This is a path in the lindluni/variable-groups repository, so all variable group files in the directory will be injected
-          projectAlpha/variables@main # TSame as above, but references a specific version via branch
-          projectBeta/variables/nodejs.yml # This is a file in the lindluni/variable-groups repository, so only variable groups in the file will be injected
-          projectBeta/variables/nodejs.yml@v1.0.0 # Same as above, but references a specific version via tag
-          projectGamma/variables/golang.yml # This is a file in the lindluni/variable-groups repository, so only variable groups in the file will be injected
-          projectGamma/variables/golang.yml@9969a43ca477571f91073abf66dfceaf1d3d069a # Same as above, but references a specific version via commit
-    - name: Print Environment
-      run: env | sort
+  job:
+    name: Echo Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inject Variables
+        uses: lindluni/actions-variable-groups@v1.0.0
+        with:
+          org: lindluni
+          repo: variable-groups
+          groups: |
+            projectAlpha/variables # This is a path in the lindluni/variable-groups repository, so all variable group files in the directory will be injected
+            projectAlpha/variables@main # TSame as above, but references a specific version via branch
+            projectBeta/variables/nodejs.yml # This is a file in the lindluni/variable-groups repository, so only variable groups in the file will be injected
+            projectBeta/variables/nodejs.yml@v1.0.0 # Same as above, but references a specific version via tag
+            projectGamma/variables/golang.yml # This is a file in the lindluni/variable-groups repository, so only variable groups in the file will be injected
+            projectGamma/variables/golang.yml@9969a43ca477571f91073abf66dfceaf1d3d069a # Same as above, but references a specific version via commit
+      - name: Print Environment
+        run: env | sort
 ```
