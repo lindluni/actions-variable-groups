@@ -12126,7 +12126,7 @@ const main = async () => {
             const files = await retrieveFiles(group, ref)
             if (Array.isArray(files)) {
                 for (const _file of files) {
-                    const file = await retrieveFile(_file.path)
+                    const file = await retrieveFile(_file.path, ref)
                     await processVariables(file)
                 }
             } else {
