@@ -12045,7 +12045,7 @@ const client = new _Octokit({
                 return true
             }
         },
-        onAbuseLimit: (retryAfter, options, octokit) => {
+        onSecondaryRateLimit: (retryAfter, options, octokit) => {
             octokit.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         },
     }
